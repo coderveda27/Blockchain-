@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import hashlib
 from typing import Optional
 
-from python_ta.contracts import check_contracts
+from python_ta.contracts import check_contracts  
 
 ###################################################################################################
 # _Transaction and Ledger class definitions
