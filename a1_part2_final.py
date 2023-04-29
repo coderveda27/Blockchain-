@@ -1,38 +1,9 @@
-"""CSC111 Assignment 1: Linked Lists and Blockchain
-
-Instructions (READ THIS FIRST!)
-===============================
-
-This Python module contains the code for Part 2 of this assignment. Please consult
-the assignment handout for instructions and details.
-
-Copyright and Usage Information
-===============================
-
-This file is provided solely for the personal and private use of students
-taking CSC111 at the University of Toronto St. George campus. All forms of
-distribution of this code, whether as given or with any changes, are
-expressly prohibited. For more information on copyright for CSC111 materials,
-please consult our Course Syllabus.
-
-This file is Copyright (c) 2023 David Liu, Mario Badr
-"""
 from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 from typing import Optional
 
 from python_ta.contracts import check_contracts
-
-###################################################################################################
-# Constants used for Part 2(c)
-###################################################################################################
-# You may change these for testing, but should restore their original values (10 and 3, respectively)
-# before your final submission. We will also test your code by providing alternate values for these
-# constants, so please make sure to actually use them in your code in Part 2(c)!
-MINING_AMOUNT = 10
-DIFFICULTY_RATING = 3
-
 
 ###################################################################################################
 # _Transaction and Ledger class definitions
@@ -310,100 +281,6 @@ class Ledger:
         else:
             self.last = new_miner
             self._balance[miner] = amount
-
-    def verify_digests(self) -> bool:
-        """Return whether all of this ledger's transactions have the correct prev_digest attribute values.
-
-        Do NOT check balances in this method, just the prev_digest values. That is, it is possible
-        for self.verify_digests() to return True and self.verify_balance() to return False.
-
-        IMPLEMENTATION NOTES:
-        - As above, digests should be computed using digest_from_hash.
-        - Assume that digest_from_hash never returns 0. So if a transaction after the first transaction
-          has a prev_digest attribute value of 0, this method should return False.
-        - Remember the vacuous truth case for universal quantifiers: if there are no transactions,
-          this method should return True.
-        """
-
-    ###################################################################################################
-    # Part 2(c) - Limiting mining and "proof of work"
-    ###################################################################################################
-    def record_mining_digest_and_nonce(self, miner: str, nonce: int) -> None:
-        """Record a new mining transaction with the given miner (i.e., person who is mining) and nonce.
-
-        Use the given nonce to construct the new transaction node.
-        Use the two constants MINING_AMOUNT and DIFFICULTY_RATING defined at the top of this file:
-
-            - MINING_AMOUNT determines the number of Titancoins to provide the miner
-            - DIFFICULTY_RATING determines the minimum number of zeros the new transaction's digest
-              must end with. The digest is computed by digest_from_hash_with_nonce.
-
-        Note: if the provided nonce value does not generate a transaction node with the required number
-        of zeros at the end, do NOT add the transaction and instead raise a ValueError.
-
-        Preconditions:
-        - miner != ''
-
-        IMPLEMENTATION NOTES (NEW):
-        - This method is very similar to the past functions.
-        - Make sure to use the two constants MINING_AMOUNT and DIFFICULTY_RATING, and digest
-          function digest_from_hash_with_nonce, in your implementation.
-        """
-
-
-###################################################################################################
-# Part 2(c) - Limiting mining and "proof of work"
-###################################################################################################
-def generate_nonce(ledger: Ledger, miner: str) -> int:
-    """Return a nonce value for the given miner that will allow the miner to add a new mining transaction.
-
-    There may be more than one valid nonce value to return; just return the first one you find to avoid
-    doing extra computation.
-
-    Use the two constants MINING_AMOUNT and DIFFICULTY_RATING defined at the top of this file:
-
-        - MINING_AMOUNT determines the number of Titancoins to provide the miner
-        - DIFFICULTY_RATING determines the minimum number of zeros the new transaction's digest
-          must end with. The digest is computed by digest_from_hash_with_nonce.
-
-    Hint: You may access ledger.last in this function.
-
-    Preconditions:
-    - miner != ''
-    """
-
-
-###################################################################################################
-# Transaction digest functions (don't change this code!)
-###################################################################################################
-def digest_from_hash(node: _Transaction) -> int:
-    """Return a digest for the given node.
-
-    This function has been provided for you, and you should not change it.
-    If you're curious, we're using a built-in Python function called hash to
-    compute a digest for the node's contents. You'll learn about hash functions
-    in CSC263/265.
-
-    You may assume that this function never returns 0.
-    """
-    data = (node.sender, node.recipient, node.amount, node.prev_digest)
-    bytestring = hashlib.sha256(str(data).encode('utf-8')).digest()
-    return int.from_bytes(bytestring, byteorder='big')
-
-
-def digest_from_hash_with_nonce(node: _Transaction) -> int:
-    """Return a digest for the given node.
-
-    This function has been provided for you, and you should not change it.
-    If you're curious, we're using a built-in Python function called hash to
-    compute a digest for the node's contents. You'll learn about hash functions
-    in CSC263/265.
-
-    You may assume that this function never returns 0.
-    """
-    data = (node.sender, node.recipient, node.amount, node.prev_digest, node.nonce)
-    bytestring = hashlib.sha256(str(data).encode('utf-8')).digest()
-    return int.from_bytes(bytestring, byteorder='big')
 
 
 ###################################################################################################
